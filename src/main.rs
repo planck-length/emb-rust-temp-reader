@@ -4,10 +4,12 @@
 use core::fmt::Write;
 
 // pick a panicking behavior
-use panic_halt as _;
+// use panic_halt as _;
+use panic_semihosting as _;
 
 use cortex_m_rt::entry;
-// use cortex_m_semihosting::hprintln;
+use cortex_m_semihosting::hprintln;
+
 use heapless::String;
 // use stm32l4xx_hal::timer::*;
 
@@ -100,7 +102,13 @@ fn main() -> ! {
     loop {
         // Request temperature register (0x00)
         let mut buffer = [0; 2]; // Buffer to hold two bytes of temperature data
-        i2c.write_read(tmp102_addr, &[0x00], &mut buffer).unwrap();
+        match i2c.write_read(tmp102_addr, &[0x00], &mut buffer) {
+            Ok(_) => {}
+            Err(e) => {
+                hprintln!("\r\nFailed to get temperature from tmp102: {:?}", e).unwrap_or_default();
+                continue;
+            }
+        };
 
         // TMP102 returns two bytes: (MSB, LSB)
         let raw_temperature = ((buffer[0] as i16) << 4) | ((buffer[1] as i16) >> 4);

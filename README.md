@@ -1,4 +1,4 @@
-# Read Temperature Using TMP102 and Nucleo L476RG
+# Read Temperature Using Rust, TMP102 and Nucleo L476RG
 ![alt text](img.jpg)
 <video controls src="demo.mp4" title="Title"></video>
 This project demonstrates how to read temperature data from a TMP102 sensor connected to an STM32 Nucleo L476RG board, using Rust and UART communication to send the data to a PC.
